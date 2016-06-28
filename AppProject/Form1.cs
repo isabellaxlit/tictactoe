@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+
 
 namespace AppProject
 {
     public partial class Form1 : Form
     {
-        
+
+        bool cpu = false;
 
         private void disableButtons()
         {
@@ -29,6 +30,7 @@ namespace AppProject
 
             catch { }
         }
+
         private void check()
         {
             bool winner = false;
@@ -38,7 +40,7 @@ namespace AppProject
             else if ((B1.Text == B2.Text) && (B2.Text == B3.Text) && (!B1.Enabled))
                 winner = true;
             else if ((C1.Text == C2.Text) && (C2.Text == C3.Text) && (!C1.Enabled))
-                winner = true; 
+                winner = true;
             //Vertical Checking
             else if ((A1.Text == B1.Text) && (B1.Text == C1.Text) && (!A1.Enabled))
                 winner = true;
@@ -47,12 +49,12 @@ namespace AppProject
             else if ((A3.Text == B3.Text) && (B3.Text == C3.Text) && (!A3.Enabled))
                 winner = true;
             //Oblique Checking
-            else if ((A1.Text == B2.Text) && (B2.Text == C3.Text)&&(!A1.Enabled))
+            else if ((A1.Text == B2.Text) && (B2.Text == C3.Text) && (!A1.Enabled))
                 winner = true;
             else if ((A3.Text == B2.Text) && (B2.Text == C1.Text) && (!A3.Enabled))
                 winner = true;
 
-            if(winner)
+            if (winner)
             {
                 disableButtons();
                 String win = "";
@@ -60,14 +62,14 @@ namespace AppProject
                     win = " O ";
                 else
                     win = " X ";
-                MessageBox.Show(win + "Wins ! ", "Yay");               
+                MessageBox.Show(win + "Wins ! ", "Yay");
             }
             else
             {
                 if (turn_count == 9)
                     MessageBox.Show("Draw !", "bummer");
             }
-       }//End of class
+        }//End of class
 
 
 
@@ -96,6 +98,11 @@ namespace AppProject
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            newGame();
+        }
+
+        private void newGame()
+        {
             turn = true;
             turn_count = 0;
 
@@ -113,9 +120,21 @@ namespace AppProject
 
         private void button_click(object sender, EventArgs e)
         {
-              
 
             Button b = (Button)sender;
+            markBoard(b);
+            check();
+
+            if (cpu)
+            {
+                ai();
+                check();
+            }
+
+        }
+
+        private void markBoard(Button b)
+        {
             if (turn)
                 b.Text = "X";
             else
@@ -124,12 +143,52 @@ namespace AppProject
             turn = !turn;
             b.Enabled = false;
             turn_count++;
-            check();
         }
+
+        private void ai()
+        {
+            try
+            {
+                foreach (Control c in Controls)
+                {
+                    Button b = (Button)c;
+                    if (b.Enabled == true)
+                    {
+                        markBoard(b);
+                        break;                       
+                  }
+               
+                }
+            }
+            catch { }
+
+        }
+
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void cPUToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //if cpu mode is true, switch it to player mode. uncheck
+            if (cpu == true)
+            {
+                cpu = false;
+                cPUToolStripMenuItem.Checked = true;
+            }
+
+            //if in player mode, switch to cpu. check
+            else if (cpu == false)
+            {
+                cpu = true;
+                cPUToolStripMenuItem.Checked = false;
+            }
+
+
+            //restart game.
+            newGame();
         }
     }
 }
