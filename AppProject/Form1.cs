@@ -176,14 +176,14 @@ namespace AppProject
             if (cpu == true)
             {
                 cpu = false;
-                cPUToolStripMenuItem.Checked = true;
+                cPUToolStripMenuItem.Checked = false;
             }
 
             //if in player mode, switch to cpu. check
             else if (cpu == false)
             {
                 cpu = true;
-                cPUToolStripMenuItem.Checked = false;
+                cPUToolStripMenuItem.Checked = true;
             }
 
 
